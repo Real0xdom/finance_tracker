@@ -1,0 +1,64 @@
+import cze from './locales/cze.json?url';
+import de from './locales/de.json?url';
+import en from './locales/en.json?url';
+import es from './locales/es.json?url';
+import fr from './locales/fr.json?url';
+import hu from './locales/hu.json?url';
+import id from './locales/id.json?url';
+import it from './locales/it.json?url';
+import ja from './locales/ja.json?url';
+import pl from './locales/pl.json?url';
+import ptbr from './locales/pt-br.json?url';
+import ru from './locales/ru.json?url';
+import tr from './locales/tr.json?url';
+
+import { createI18n } from 'vue-i18n';
+import type { IntlNumberFormat } from 'vue-i18n';
+
+const localeUrls = { de, en, tr, it, 'pt-br': ptbr, cze, hu, pl, ru, es, fr, id, ja };
+
+export const availableLocales = Object.keys(localeUrls);
+
+export const initialLocale =
+  (navigator.languages
+    .flatMap((v) => [v, ...v.split('-')])
+    .find((locale) => availableLocales.includes(locale)) as AvailableLocale) ?? 'en';
+
+export type AvailableLocale = keyof typeof localeUrls;
+
+const numberFormats: IntlNumberFormat = {
+  blank: {},
+  currency: {
+    minimumFractionDigits: 0,
+    style: 'currency'
+  },
+  percent: {
+    maximumFractionDigits: 0,
+    style: 'percent'
+  }
+};
+
+export const i18n = createI18n({
+  legacy: false,
+  locale: initialLocale,
+  messages: {}
+});
+
+export const changeLocale = async (locale: AvailableLocale, currency?: Intl.NumberFormatOptions) => {
+  if (!(locale in i18n.global.messages.value)) {
+    const messages = await fetch(localeUrls[locale]).then((res) => res.json());
+    i18n.global.setLocaleMessage(locale, messages);
+  }
+
+  const numberFormat: IntlNumberFormat = {
+    ...numberFormats,
+    currency: { ...numberFormats.currency, ...currency }
+  };
+
+  i18n.global.setNumberFormat(locale, numberFormat);
+  i18n.global.locale.value = locale;
+
+  document.documentElement.lang = locale;
+};
+
+await changeLocale(initialLocale);
