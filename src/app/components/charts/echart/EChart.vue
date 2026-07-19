@@ -71,7 +71,7 @@ watch(rootSize, (value) => {
 });
 
 const download = async (name: string, type: 'png' | 'svg') => {
-  downloadBlob(type === 'png' ? await png() : svg(), `${name}.${type}`);
+  await downloadBlob(type === 'png' ? await png() : svg(), `${name}.${type}`);
 };
 
 defineExpose({ download });

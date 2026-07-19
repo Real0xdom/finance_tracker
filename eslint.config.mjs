@@ -19,7 +19,7 @@ export default defineConfig([
   ...vueI18n.configs['flat/recommended'],
   vuePrettier,
   {
-    ignores: ['.data/', 'dist/', 'node_modules/']
+    ignores: ['.data/', 'dist/', 'node_modules/', 'android/', 'ios/']
   },
   {
     files: ['**/*.{vue,ts,mts,js,mjs,json}'],

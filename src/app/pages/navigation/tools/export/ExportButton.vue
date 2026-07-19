@@ -13,6 +13,6 @@ const { serialize } = useDataStore();
 const { t } = useI18n();
 
 const save = () => {
-  downloadFile(serialize(), 'ocular-data.json', 'application/json');
+  void downloadFile(serialize(), 'ocular-data.json', 'application/json');
 };
 </script>

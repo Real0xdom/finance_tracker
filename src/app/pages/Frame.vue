@@ -110,6 +110,10 @@ const buttons = computed((): FrameButton[] => [
   height: 100%;
   width: 100%;
   background: var(--app-background);
+  /* --safe-area-inset-* is injected by capacitor on android, env() covers ios and pwa */
+  padding-top: var(--safe-area-inset-top, env(safe-area-inset-top));
+  padding-left: var(--safe-area-inset-left, env(safe-area-inset-left));
+  padding-right: var(--safe-area-inset-right, env(safe-area-inset-right));
 }
 
 .panes {
@@ -157,7 +161,7 @@ const buttons = computed((): FrameButton[] => [
 @include globals.onMobileDevices {
   .frame {
     flex-direction: column-reverse;
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom));
   }
 
   .panes {

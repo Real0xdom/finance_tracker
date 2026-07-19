@@ -1,5 +1,5 @@
 <template>
-  <button :data-testid="testId" type="button" :class="$style.switch" @click="modelValue = !modelValue">
+  <button :data-testid="testId" type="button" :class="$style.switch" @click="toggle">
     <span :class="$style.icons">
       <span :class="$style.icon">
         <component :is="iconOff" />
@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts" setup>
+import { hapticFeedback } from '@utils/haptics/haptics.ts';
 import { type Component } from 'vue';
 
 const modelValue = defineModel<boolean>();
@@ -30,6 +31,11 @@ defineProps<{
   iconOff: Component;
   testId?: string;
 }>();
+
+const toggle = () => {
+  hapticFeedback();
+  modelValue.value = !modelValue.value;
+};
 </script>
 
 <style lang="scss" module>
