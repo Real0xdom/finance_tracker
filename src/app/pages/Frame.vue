@@ -1,5 +1,6 @@
 <template>
-  <div ref="frame" :class="$style.frame">
+  <LoginPage v-if="showLogin" :closable="HYBRID" @close="manualLogin = false" />
+  <div v-else-if="ready" ref="frame" :class="$style.frame">
     <div :class="$style.buttons">
       <template v-if="appSize !== 'mobile'">
         <ThemeButton :class="$style.btn" />
@@ -33,7 +34,7 @@
 
       <div v-if="appSize !== 'mobile'" :class="$style.divider" />
       <UpdateAppButton v-if="appSize !== 'mobile'" :class="$style.btn" />
-      <CloudButton :class="[$style.btn, $style.cloud]" />
+      <CloudButton :class="[$style.btn, $style.cloud]" @login="manualLogin = true" />
     </div>
 
     <div ref="panes" :class="$style.panes">
@@ -48,6 +49,7 @@
 </template>
 
 <script lang="ts" setup>
+import LoginPage from '@app/pages/login/LoginPage.vue';
 import AdminButton from '@app/pages/navigation/admin/AdminButton.vue';
 import CloudButton from '@app/pages/navigation/auth/CloudButton.vue';
 import InfoButton from '@app/pages/navigation/info/InfoButton.vue';
@@ -63,7 +65,7 @@ import { useAppSize } from '@composables/app-size/useAppSize.ts';
 import { useSquircle } from '@composables/squircle/useSquircle.ts';
 import { useStorage } from '@store/storage/useStorage.ts';
 import { RiDonutChartLine, RiHandCoinLine, RiShoppingBagLine } from '@remixicon/vue';
-import { computed, useCssModule, useTemplateRef } from 'vue';
+import { computed, ref, useCssModule, useTemplateRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { ClassNames } from '@utils/types.ts';
 import type { Component } from 'vue';
@@ -75,11 +77,20 @@ type FrameButton = {
   class?: ClassNames;
 };
 
+const CLOUD = !!import.meta.env.OCULAR_GENESIS_HOST;
+const HYBRID = !!import.meta.env.OCULAR_HYBRID_MODE;
+
 const appSize = useAppSize();
 const frame = useTemplateRef('frame');
 const styles = useCssModule();
-const { user } = useStorage();
+const { user, sessionInitialized } = useStorage();
 const { t } = useI18n();
+
+const manualLogin = ref(false);
+const showLogin = computed(() => CLOUD && sessionInitialized.value && !user.value && (!HYBRID || manualLogin.value));
+const ready = computed(() => !CLOUD || HYBRID || sessionInitialized.value);
+
+watch(user, (value) => value && (manualLogin.value = false));
 
 useSquircle(frame, () => (['minimized', 'mobile'].includes(appSize.value) ? 0 : 0.035));
 

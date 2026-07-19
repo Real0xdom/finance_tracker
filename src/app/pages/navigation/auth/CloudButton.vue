@@ -12,35 +12,32 @@
     :icon="icon[1]"
     @click="auth"
   />
-  <LoginDialog :lockDialog="FORCE_DIALOG && !user" :open="showLoginDialog" @close="showLoginDialog = false" />
 </template>
 
 <script lang="ts" setup>
-import LoginDialog from './LoginDialog.vue';
 import Button from '@components/base/button/Button.vue';
 import { useStorage } from '@store/storage/useStorage.ts';
 import { RiCloudLine, RiCloudOffLine, RiRefreshLine, RiSignalWifiErrorLine } from '@remixicon/vue';
-import { watchImmediate } from '@vueuse/core';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import type { Color } from '@composables/theme-styles/useThemeStyles.ts';
 import type { ClassNames } from '@utils/types.ts';
 import type { Component } from 'vue';
 
-const { OCULAR_GENESIS_HOST, OCULAR_HYBRID_MODE } = import.meta.env;
+const { OCULAR_GENESIS_HOST } = import.meta.env;
 
-const FORCE_DIALOG = !OCULAR_HYBRID_MODE && !!OCULAR_GENESIS_HOST;
+const emit = defineEmits<{
+  login: [];
+}>();
 
 const props = defineProps<{
   class?: ClassNames;
 }>();
 
-const { status, logout, user } = useStorage();
+const { status, logout } = useStorage();
 const { t } = useI18n();
 const router = useRouter();
-
-const showLoginDialog = ref(FORCE_DIALOG);
 
 const classes = computed(() => props.class);
 
@@ -69,16 +66,10 @@ const auth = async () => {
   if (!OCULAR_GENESIS_HOST) return;
 
   if (status.value === 'idle') {
-    showLoginDialog.value = true;
+    emit('login');
   } else {
     logout();
     await router.push('/');
   }
 };
-
-watchImmediate(user, (value) => {
-  if (FORCE_DIALOG) {
-    showLoginDialog.value = !value;
-  }
-});
 </script>

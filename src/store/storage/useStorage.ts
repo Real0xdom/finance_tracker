@@ -20,6 +20,7 @@ export type StorageSync<T extends MigratableState, P extends MigratableState = T
 
 export const useStorage = createGlobalState(() => {
   const authenticatedUser = shallowRef<StorageUser | undefined>();
+  const sessionInitialized = ref(!OCULAR_SUPABASE_URL);
   const syncsFailed = shallowReactive<Set<() => Promise<void>>>(new Set());
   const pushFailed = ref(false);
   const syncsActive = ref(0);
@@ -141,11 +142,12 @@ export const useStorage = createGlobalState(() => {
 
   // Check if user is logged in
   if (OCULAR_SUPABASE_URL) {
-    void login();
+    void login().finally(() => (sessionInitialized.value = true));
   }
 
   return {
     status,
+    sessionInitialized: readonly(sessionInitialized),
     user: readonly(authenticatedUser),
     getAllUsers: store.getAllUsers,
     deleteUser: store.deleteUser,
