@@ -69,12 +69,15 @@
     "auth": {
       "welcomeBack": "Tekrar hoşgeldin!",
       "signIn": "Giriş",
-      "username": "Kullanıcı Adı",
       "password": "Parola",
       "loginNotAvailable": "Giriş kullanılamıyor, backend yapılandırılmamış.",
-      "loginNotAvailableDueToHttp": "Sayfa HTTP üzerinden erişiliyorsa oturum açma çalışmayabilir. .env dosyanızda GENESIS_JWT_COOKIE_ALLOW_HTTP değerini true olarak ayarladığınızdan emin olun veya daha iyisi uygulamaya erişmek için HTTPS kullanın.",
       "incorrectUsernameOrPassword": "Giriş başarısız, kullanıcı adı ve/veya parola geçersiz.",
-      "tooManyFailedAttempts": "Çok fazla başarısız giriş denemesi, {duration} sonra tekrar deneyin."
+      "tooManyFailedAttempts": "Çok fazla başarısız giriş denemesi, {duration} sonra tekrar deneyin.",
+      "email": "E-posta",
+      "signUp": "Hesap oluştur",
+      "noAccount": "Henüz hesabınız yok mu? Oluşturun",
+      "haveAccount": "Zaten hesabınız var mı? Giriş yapın",
+      "confirmationEmailSent": "Neredeyse bitti! Gelen kutunuzu kontrol edin ve kaydı tamamlamak için e-posta adresinizi doğrulayın."
     },
     "admin": {
       "settings": "Yönetici ayarları",

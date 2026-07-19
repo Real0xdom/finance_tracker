@@ -80,6 +80,17 @@ export const createClient = (opt: SupabaseStoreOptions) => {
     return { data: toUser(data.user.email) };
   };
 
+  const signup = async (body: LoginRequest): Promise<StorageResponse<{ user: StorageUser; confirmed: boolean }>> => {
+    const { data, error } = await supabase.auth.signUp({ email: body.user, password: body.password });
+
+    if (error) {
+      return { error: { message: error.message, status: error.status ?? -1 }, data: undefined };
+    }
+
+    // supabase returns no session if the account still needs to be confirmed via email
+    return { data: { user: toUser(data.user?.email ?? body.user), confirmed: !!data.session } };
+  };
+
   const logout = async (): Promise<StorageResponse<undefined>> => {
     await supabase.auth.signOut();
     return { data: undefined, error: undefined };
@@ -184,6 +195,7 @@ export const createClient = (opt: SupabaseStoreOptions) => {
 
   return {
     login,
+    signup,
     logout,
     updatePassword,
     getData,

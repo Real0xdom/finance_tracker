@@ -44,6 +44,15 @@ export const useStorage = createGlobalState(() => {
       return res;
     });
 
+  const signup = async (user: string, password: string) =>
+    store.signup({ user, password }).then((res) => {
+      if (res.data?.confirmed) {
+        authenticatedUser.value = res.data.user;
+      }
+
+      return res;
+    });
+
   const sync = <T extends MigratableState, P extends MigratableState = T>(config: StorageSync<T, P>) => {
     const initializing = ref(true);
     const errored = ref(false);
@@ -145,6 +154,7 @@ export const useStorage = createGlobalState(() => {
     updatePassword: store.updatePassword,
     retry,
     login,
+    signup,
     logout,
     sync
   };

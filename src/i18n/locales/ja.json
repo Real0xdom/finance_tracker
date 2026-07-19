@@ -69,12 +69,15 @@
     "auth": {
       "welcomeBack": "おかえりなさい！",
       "signIn": "サインイン",
-      "username": "ユーザー名",
       "password": "パスワード",
       "loginNotAvailable": "ログインできません。バックエンドが設定されていません。",
-      "loginNotAvailableDueToHttp": "HTTPでアクセスしている場合、ログインが正常に機能しない可能性があります。.envファイルでGENESIS_JWT_COOKIE_ALLOW_HTTPをtrueに設定するか、HTTPSでアクセスしてください。",
       "incorrectUsernameOrPassword": "ログインに失敗しました。ユーザー名またはパスワードが無効です。",
-      "tooManyFailedAttempts": "ログイン試行回数が上限を超えました。{duration}後に再試行してください。"
+      "tooManyFailedAttempts": "ログイン試行回数が上限を超えました。{duration}後に再試行してください。",
+      "email": "メールアドレス",
+      "signUp": "アカウント作成",
+      "noAccount": "アカウントをお持ちでない場合は作成",
+      "haveAccount": "すでにアカウントをお持ちの場合はサインイン",
+      "confirmationEmailSent": "あと少しです！受信トレイを確認し、メールアドレスを確認して登録を完了してください。"
     },
     "admin": {
       "settings": "管理者設定",

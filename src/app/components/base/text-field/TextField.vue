@@ -45,7 +45,7 @@ const modelValue = defineModel<string>();
 
 withDefaults(
   defineProps<{
-    type?: 'text' | 'password';
+    type?: 'text' | 'password' | 'email';
     name?: string;
     minLength?: number;
     maxLength?: number;

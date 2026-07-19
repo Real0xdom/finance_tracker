@@ -69,12 +69,15 @@
     "auth": {
       "welcomeBack": "Köszöntjük az oldalon!",
       "signIn": "Bejelentkezés",
-      "username": "Felhasználónév",
       "password": "Jelszó",
       "loginNotAvailable": "A bejelentkezés jelenleg nem elérhető.",
-      "loginNotAvailableDueToHttp": "A bejelentkezés előfordulhat, hogy nem működik, ha az oldal HTTP-n keresztül érhető el. Győződjön meg róla, hogy a .env fájlban a GENESIS_JWT_COOKIE_ALLOW_HTTP értékét true-ra állítja, vagy még jobb, használjon HTTPS-t az alkalmazás eléréséhez.",
       "incorrectUsernameOrPassword": "Bejelentkezés sikertelen, a felhasználónév és/vagy a jelszó érvénytelen.",
-      "tooManyFailedAttempts": "Túl sok sikertelen bejelentkezési kísérlet, próbáld újra {duration} múlva."
+      "tooManyFailedAttempts": "Túl sok sikertelen bejelentkezési kísérlet, próbáld újra {duration} múlva.",
+      "email": "E-mail",
+      "signUp": "Fiók létrehozása",
+      "noAccount": "Még nincs fiókod? Hozz létre egyet",
+      "haveAccount": "Már van fiókod? Jelentkezz be",
+      "confirmationEmailSent": "Majdnem kész! Ellenőrizd a postaládádat, és erősítsd meg az e-mail-címedet a regisztráció befejezéséhez."
     },
     "admin": {
       "settings": "Admin beállítások",

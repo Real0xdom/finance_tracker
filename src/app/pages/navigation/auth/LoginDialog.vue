@@ -4,36 +4,41 @@
     :closeOnBackgroundClick="false"
     :open="open"
     :lock="lockDialog"
-    :title="t('navigation.auth.welcomeBack')"
+    :title="mode === 'signIn' ? t('navigation.auth.welcomeBack') : t('navigation.auth.signUp')"
     @close="emit('close')"
   >
     <Form
       :disabled="!!retryDuration"
-      :maxWidth="INSECURE_CONNECTION ? 350 : undefined"
-      :submitIcon="RiLoginCircleLine"
-      :submitLabel="t('navigation.auth.signIn')"
-      @submit="executeImmediate(username, password)"
+      :submitIcon="mode === 'signIn' ? RiLoginCircleLine : RiUserAddLine"
+      :submitLabel="mode === 'signIn' ? t('navigation.auth.signIn') : t('navigation.auth.signUp')"
+      @submit="submit"
     >
-      <Alert v-if="INSECURE_CONNECTION" :text="t('navigation.auth.loginNotAvailableDueToHttp')" type="warning" />
-
       <TextField
         v-model="username"
         testId="username"
         required
-        :label="t('navigation.auth.username')"
-        type="text"
-        name="username"
+        :label="t('navigation.auth.email')"
+        type="email"
+        name="email"
       />
       <TextField
         v-model="password"
         testId="password"
         required
+        :minLength="mode === 'signUp' ? 8 : undefined"
         :label="t('navigation.auth.password')"
         type="password"
         name="password"
       />
 
-      <template v-if="state?.error?.status === 429">
+      <Alert
+        v-if="confirmationSent"
+        testId="signup-confirmation-sent"
+        :text="t('navigation.auth.confirmationEmailSent')"
+        type="success"
+      />
+
+      <template v-else-if="mode === 'signIn' && state?.error?.status === 429">
         <Alert
           v-if="retryDuration"
           testId="login-too-many-attempts"
@@ -43,30 +48,40 @@
       </template>
 
       <Alert
-        v-else-if="state?.error?.status === 401"
+        v-else-if="mode === 'signIn' && state?.error?.status === 401"
         testId="login-invalid-credentials"
         :text="t('navigation.auth.incorrectUsernameOrPassword')"
         type="error"
       />
 
-      <Alert v-else-if="state?.error" :text="state?.error.message" type="error" />
+      <Alert v-else-if="mode === 'signIn' && state?.error" :text="state.error.message" type="error" />
+      <Alert v-else-if="mode === 'signUp' && signupError" :text="signupError" type="error" />
+
+      <Button
+        :class="$style.toggleMode"
+        textual
+        color="dimmed"
+        type="button"
+        :text="mode === 'signIn' ? t('navigation.auth.noAccount') : t('navigation.auth.haveAccount')"
+        @click="toggleMode"
+      />
     </Form>
   </Dialog>
 </template>
 
 <script lang="ts" setup>
 import Alert from '@components/base/alert/Alert.vue';
+import Button from '@components/base/button/Button.vue';
 import Dialog from '@components/base/dialog/Dialog.vue';
 import Form from '@components/base/form/Form.vue';
 import TextField from '@components/base/text-field/TextField.vue';
 import { useStorage } from '@store/storage/useStorage.ts';
-import { RiLoginCircleLine } from '@remixicon/vue';
+import { RiLoginCircleLine, RiUserAddLine } from '@remixicon/vue';
 import { useAsyncState, useTimestamp } from '@vueuse/core';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { OCULAR_TEST_USERNAME, OCULAR_TEST_PASSWORD } = import.meta.env;
-const INSECURE_CONNECTION = window.location.protocol === 'http:' && !import.meta.env.OCULAR_HYBRID_MODE;
 
 const emit = defineEmits<{
   close: [];
@@ -79,13 +94,46 @@ defineProps<{
 
 const time = useTimestamp();
 const { t, locale } = useI18n();
-const { login } = useStorage();
+const { login, signup } = useStorage();
 const { state, executeImmediate } = useAsyncState(login, undefined, {
   immediate: false
 });
 
+const mode = ref<'signIn' | 'signUp'>('signIn');
 const username = ref(OCULAR_TEST_USERNAME);
 const password = ref(OCULAR_TEST_PASSWORD);
+const signupError = ref<string | undefined>();
+const confirmationSent = ref(false);
+
+const toggleMode = () => {
+  mode.value = mode.value === 'signIn' ? 'signUp' : 'signIn';
+  signupError.value = undefined;
+  confirmationSent.value = false;
+  state.value = undefined;
+};
+
+const submit = async () => {
+  if (mode.value === 'signIn') {
+    await executeImmediate(username.value, password.value);
+    return;
+  }
+
+  signupError.value = undefined;
+  confirmationSent.value = false;
+
+  const res = await signup(username.value ?? '', password.value ?? '');
+
+  if (res.error) {
+    signupError.value = res.error.message;
+  } else if (res.data.confirmed) {
+    // account is active and logged in right away
+    username.value = '';
+    password.value = '';
+    emit('close');
+  } else {
+    confirmationSent.value = true;
+  }
+};
 
 const relativeTimeFormatter = computed(() => new Intl.RelativeTimeFormat(locale.value, { numeric: 'auto' }));
 
@@ -131,3 +179,9 @@ watch(state, (response) => {
   }
 });
 </script>
+
+<style lang="scss" module>
+.toggleMode {
+  align-self: center;
+}
+</style>
