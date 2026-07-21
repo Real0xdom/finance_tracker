@@ -117,7 +117,9 @@ const totals = computed(() => {
 
 .budgetGroups {
   display: grid;
-  grid-template: auto / max-content max-content max-content repeat(12, 1fr) max-content max-content;
+  // a fixed minimum keeps month columns from being crushed to unreadable widths on narrow screens,
+  // the surrounding .content (see Pane.vue) scrolls horizontally once they hit that floor
+  grid-template: auto / max-content max-content max-content repeat(12, minmax(72px, 1fr)) max-content max-content;
   align-items: center;
   padding-bottom: 20px;
 }
@@ -142,6 +144,7 @@ const totals = computed(() => {
   text-align: right;
   height: 24px;
   top: 0;
+  overflow: hidden;
 
   &.current > span {
     background: var(--c-primary);
@@ -151,8 +154,13 @@ const totals = computed(() => {
   }
 
   > span {
+    display: inline-block;
+    max-width: 100%;
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-m);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 }
 

@@ -24,10 +24,10 @@
       <div v-if="appSize !== 'mobile'" style="flex-grow: 1" />
 
       <ToolsButton :class="[$style.btn, $style.tools]" />
+      <AdminButton v-if="user?.admin" :class="[$style.btn, $style.admin]" />
+      <ChangeYearButton :class="[$style.btn, $style.changeYear]" />
 
       <template v-if="appSize !== 'mobile'">
-        <AdminButton v-if="user?.admin" :class="$style.btn" />
-        <ChangeYearButton :class="$style.btn" />
         <SettingsButton :class="$style.btn" />
         <InfoButton :class="$style.btn" />
       </template>
@@ -176,10 +176,14 @@ const buttons = computed((): FrameButton[] => [
     margin-top: 0;
     justify-content: space-evenly;
     flex-direction: row;
+    flex-shrink: 0;
     height: auto;
     padding: 6px 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
 
     .btn {
+      flex-shrink: 0;
       width: 42px;
       height: 42px;
 
@@ -201,6 +205,14 @@ const buttons = computed((): FrameButton[] => [
 
       &.tools {
         order: 5;
+      }
+
+      &.changeYear {
+        order: 6;
+      }
+
+      &.admin {
+        order: 7;
       }
     }
   }

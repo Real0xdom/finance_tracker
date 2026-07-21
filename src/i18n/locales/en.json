@@ -77,7 +77,8 @@
       "signUp": "Create account",
       "noAccount": "No account yet? Create one",
       "haveAccount": "Already have an account? Sign in",
-      "confirmationEmailSent": "Almost done! Check your inbox and confirm your email address to finish signing up."
+      "confirmationEmailSent": "Almost done! Check your inbox and confirm your email address to finish signing up.",
+      "logoutConfirm": "Are you sure you want to sign out?"
     },
     "admin": {
       "settings": "Admin settings",

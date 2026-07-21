@@ -77,7 +77,8 @@
       "signUp": "Buat akun",
       "noAccount": "Belum punya akun? Buat sekarang",
       "haveAccount": "Sudah punya akun? Masuk",
-      "confirmationEmailSent": "Hampir selesai! Periksa kotak masuk Anda dan konfirmasi alamat email Anda untuk menyelesaikan pendaftaran."
+      "confirmationEmailSent": "Hampir selesai! Periksa kotak masuk Anda dan konfirmasi alamat email Anda untuk menyelesaikan pendaftaran.",
+      "logoutConfirm": "Apakah Anda yakin ingin keluar?"
     },
     "admin": {
       "settings": "Pengaturan admin",

@@ -77,7 +77,8 @@
       "signUp": "Créer un compte",
       "noAccount": "Pas encore de compte ? Créez-en un",
       "haveAccount": "Vous avez déjà un compte ? Connectez-vous",
-      "confirmationEmailSent": "Presque terminé ! Vérifiez votre boîte de réception et confirmez votre adresse e-mail pour finaliser l’inscription."
+      "confirmationEmailSent": "Presque terminé ! Vérifiez votre boîte de réception et confirmez votre adresse e-mail pour finaliser l’inscription.",
+      "logoutConfirm": "Voulez-vous vraiment vous déconnecter ?"
     },
     "admin": {
       "settings": "Paramètres administrateur",

@@ -77,7 +77,8 @@
       "signUp": "Criar conta",
       "noAccount": "Ainda não tem uma conta? Crie uma",
       "haveAccount": "Já tem uma conta? Entrar",
-      "confirmationEmailSent": "Quase lá! Verifique sua caixa de entrada e confirme seu endereço de e-mail para concluir o cadastro."
+      "confirmationEmailSent": "Quase lá! Verifique sua caixa de entrada e confirme seu endereço de e-mail para concluir o cadastro.",
+      "logoutConfirm": "Tem certeza de que deseja sair?"
     },
     "admin": {
       "settings": "Configurações de Administrador",

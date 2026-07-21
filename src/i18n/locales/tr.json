@@ -77,7 +77,8 @@
       "signUp": "Hesap oluştur",
       "noAccount": "Henüz hesabınız yok mu? Oluşturun",
       "haveAccount": "Zaten hesabınız var mı? Giriş yapın",
-      "confirmationEmailSent": "Neredeyse bitti! Gelen kutunuzu kontrol edin ve kaydı tamamlamak için e-posta adresinizi doğrulayın."
+      "confirmationEmailSent": "Neredeyse bitti! Gelen kutunuzu kontrol edin ve kaydı tamamlamak için e-posta adresinizi doğrulayın.",
+      "logoutConfirm": "Çıkış yapmak istediğinizden emin misiniz?"
     },
     "admin": {
       "settings": "Yönetici ayarları",

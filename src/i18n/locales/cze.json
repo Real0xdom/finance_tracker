@@ -77,7 +77,8 @@
       "signUp": "Vytvořit účet",
       "noAccount": "Ještě nemáte účet? Vytvořte si ho",
       "haveAccount": "Už máte účet? Přihlaste se",
-      "confirmationEmailSent": "Téměř hotovo! Zkontrolujte svou e-mailovou schránku a potvrďte svou e-mailovou adresu pro dokončení registrace."
+      "confirmationEmailSent": "Téměř hotovo! Zkontrolujte svou e-mailovou schránku a potvrďte svou e-mailovou adresu pro dokončení registrace.",
+      "logoutConfirm": "Opravdu se chcete odhlásit?"
     },
     "admin": {
       "settings": "Nastavení správce",

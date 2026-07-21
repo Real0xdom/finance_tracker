@@ -77,7 +77,8 @@
       "signUp": "Konto erstellen",
       "noAccount": "Noch kein Konto? Jetzt erstellen",
       "haveAccount": "Bereits ein Konto? Anmelden",
-      "confirmationEmailSent": "Fast geschafft! Prüfe dein Postfach und bestätige deine E-Mail-Adresse, um die Registrierung abzuschließen."
+      "confirmationEmailSent": "Fast geschafft! Prüfe dein Postfach und bestätige deine E-Mail-Adresse, um die Registrierung abzuschließen.",
+      "logoutConfirm": "Möchtest du dich wirklich abmelden?"
     },
     "admin": {
       "settings": "Admin-Einstellungen",

@@ -77,7 +77,8 @@
       "signUp": "アカウント作成",
       "noAccount": "アカウントをお持ちでない場合は作成",
       "haveAccount": "すでにアカウントをお持ちの場合はサインイン",
-      "confirmationEmailSent": "あと少しです！受信トレイを確認し、メールアドレスを確認して登録を完了してください。"
+      "confirmationEmailSent": "あと少しです！受信トレイを確認し、メールアドレスを確認して登録を完了してください。",
+      "logoutConfirm": "本当にサインアウトしますか？"
     },
     "admin": {
       "settings": "管理者設定",

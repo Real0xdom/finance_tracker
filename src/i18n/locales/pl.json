@@ -77,7 +77,8 @@
       "signUp": "Utwórz konto",
       "noAccount": "Nie masz jeszcze konta? Utwórz je",
       "haveAccount": "Masz już konto? Zaloguj się",
-      "confirmationEmailSent": "Prawie gotowe! Sprawdź swoją skrzynkę i potwierdź adres e-mail, aby dokończyć rejestrację."
+      "confirmationEmailSent": "Prawie gotowe! Sprawdź swoją skrzynkę i potwierdź adres e-mail, aby dokończyć rejestrację.",
+      "logoutConfirm": "Czy na pewno chcesz się wylogować?"
     },
     "admin": {
       "settings": "Ustawienia administratora",

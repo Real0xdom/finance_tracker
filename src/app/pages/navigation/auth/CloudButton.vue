@@ -67,7 +67,7 @@ const auth = async () => {
 
   if (status.value === 'idle') {
     emit('login');
-  } else {
+  } else if (window.confirm(t('navigation.auth.logoutConfirm'))) {
     logout();
     await router.push('/');
   }

@@ -77,7 +77,8 @@
       "signUp": "Crea account",
       "noAccount": "Non hai ancora un account? Creane uno",
       "haveAccount": "Hai già un account? Accedi",
-      "confirmationEmailSent": "Quasi fatto! Controlla la tua casella di posta e conferma il tuo indirizzo e-mail per completare la registrazione."
+      "confirmationEmailSent": "Quasi fatto! Controlla la tua casella di posta e conferma il tuo indirizzo e-mail per completare la registrazione.",
+      "logoutConfirm": "Sei sicuro di voler uscire?"
     },
     "admin": {
       "settings": "Impostazioni dell'amministratore",

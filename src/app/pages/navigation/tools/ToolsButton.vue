@@ -10,6 +10,12 @@
     </template>
 
     <template #options>
+      <template v-if="appSize === 'mobile'">
+        <ThemeMenuButton />
+        <SettingsMenuButton />
+        <InfoMenuButton />
+        <UpdateMenuButton />
+      </template>
       <LoadDemoDataButton v-if="!OCULAR_GENESIS_HOST || OCULAR_HYBRID_MODE" />
       <ChangePasswordButton v-if="user" />
       <PrivacyModeButton />
@@ -29,6 +35,10 @@ import ExportButton from './export/ExportButton.vue';
 import ImportButton from './import/ImportButton.vue';
 import LoadDemoDataButton from './load-demo-data/LoadDemoDataButton.vue';
 import PrivacyModeButton from './privacy-mode/PrivacyModeButton.vue';
+import InfoMenuButton from '@app/pages/navigation/info/InfoMenuButton.vue';
+import SettingsMenuButton from '@app/pages/navigation/settings/SettingsMenuButton.vue';
+import ThemeMenuButton from '@app/pages/navigation/theme/ThemeMenuButton.vue';
+import UpdateMenuButton from '@app/pages/navigation/update/UpdateMenuButton.vue';
 import Button from '@components/base/button/Button.vue';
 import ContextMenu from '@components/base/context-menu/ContextMenu.vue';
 import { useAppSize } from '@composables/app-size/useAppSize.ts';

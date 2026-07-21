@@ -77,7 +77,8 @@
       "signUp": "Crear cuenta",
       "noAccount": "¿Aún no tienes cuenta? Crea una",
       "haveAccount": "¿Ya tienes cuenta? Inicia sesión",
-      "confirmationEmailSent": "¡Casi listo! Revisa tu bandeja de entrada y confirma tu correo electrónico para completar el registro."
+      "confirmationEmailSent": "¡Casi listo! Revisa tu bandeja de entrada y confirma tu correo electrónico para completar el registro.",
+      "logoutConfirm": "¿Seguro que quieres cerrar sesión?"
     },
     "admin": {
       "settings": "Configuraciones de administrador",
