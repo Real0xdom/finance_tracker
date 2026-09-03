@@ -39,16 +39,25 @@ jobs:
 
       - name: Build web bundle
         env:
-          # Add these under Settings -> Secrets and variables -> Actions.
-          # The anon key is a publishable client key; row level security is what
-          # actually protects the data.
-          FT_SUPABASE_URL: ${{ secrets.FT_SUPABASE_URL }}
-          FT_SUPABASE_ANON_KEY: ${{ secrets.FT_SUPABASE_ANON_KEY }}
+          # Read from the Secrets tab first, falling back to the Variables tab --
+          # both live under Settings -> Secrets and variables -> Actions, and it is
+          # easy to add them to the wrong one. The anon key is a publishable client
+          # key; row level security is what actually protects the data.
+          FT_SUPABASE_URL: ${{ secrets.FT_SUPABASE_URL || vars.FT_SUPABASE_URL }}
+          FT_SUPABASE_ANON_KEY: ${{ secrets.FT_SUPABASE_ANON_KEY || vars.FT_SUPABASE_ANON_KEY }}
         run: |
+          # report each name separately, so a failure says which one is missing
+          # (lengths only -- never the values themselves)
+          echo "FT_SUPABASE_URL:      ${FT_SUPABASE_URL:+present} (${#FT_SUPABASE_URL} chars)"
+          echo "FT_SUPABASE_ANON_KEY: ${FT_SUPABASE_ANON_KEY:+present} (${#FT_SUPABASE_ANON_KEY} chars)"
+
           if [ -z "$FT_SUPABASE_URL" ] || [ -z "$FT_SUPABASE_ANON_KEY" ]; then
-            echo "::error::FT_SUPABASE_URL and FT_SUPABASE_ANON_KEY repository secrets are not set."
+            echo "::error::Missing config. Check Settings -> Secrets and variables -> Actions."
+            echo "::error::Names must match exactly: FT_SUPABASE_URL, FT_SUPABASE_ANON_KEY."
+            echo "::error::They must be under the 'Secrets' (or 'Variables') tab for Actions -- Dependabot secrets are not visible here."
             exit 1
           fi
+
           npm run build
 
       - name: Sync Capacitor
