@@ -1,0 +1,499 @@
+/* Mobile-first dark UI. Everything is sized for one-thumb use on a phone. */
+:root {
+  --bg: #0f1115;
+  --surface: #171a21;
+  --surface-2: #1f2430;
+  --line: #2a3040;
+  --text: #eef1f6;
+  --muted: #8b93a7;
+  --accent: #5b8cff;
+
+  --expense: #ff6b6b;
+  --income: #35d07f;
+  --invest: #b98bff;
+  --lend: #ffb03a;
+
+  --radius: 16px;
+  --tap: 48px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.45 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overscroll-behavior-y: none;
+}
+
+#app {
+  min-height: 100%;
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* ------------------------------------------------------------------ layout */
+.screen {
+  min-height: 100vh;
+  padding: calc(var(--safe-top) + 12px) 16px calc(var(--safe-bottom) + 88px);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--tap);
+  margin-bottom: 14px;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.topbar .spacer {
+  flex: 1;
+}
+
+.back {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-left: -8px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface-2);
+  font-size: 20px;
+}
+
+/* ------------------------------------------------------------------- cards */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 118px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--tint, var(--accent));
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+}
+
+.card:active {
+  background: var(--surface-2);
+}
+
+.card .label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.card .value {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--tint, var(--text));
+}
+
+.card .sub {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------------ generic */
+.panel {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.panel + .panel,
+.cards + .panel,
+.panel + .cards {
+  margin-top: 12px;
+}
+
+.section-title {
+  margin: 20px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.tiny {
+  font-size: 12px;
+}
+
+.right {
+  text-align: right;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty {
+  padding: 28px 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------ inputs */
+.field {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.field > span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--accent);
+}
+
+textarea.input {
+  min-height: 80px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.search {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+  font-size: 16px;
+  outline: none;
+}
+
+.search:focus {
+  border-color: var(--accent);
+}
+
+.amount-input {
+  width: 100%;
+  min-height: 64px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: right;
+  outline: none;
+}
+
+.amount-input:focus {
+  border-color: var(--accent);
+}
+
+/* ----------------------------------------------------------------- buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--tap);
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:active {
+  opacity: 0.75;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+}
+
+.btn.primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn.danger {
+  border-color: transparent;
+  background: #3a1f24;
+  color: var(--expense);
+}
+
+.btn.block {
+  width: 100%;
+}
+
+.btn.sm {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+/* ------------------------------------------------------------------- chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.chip.on {
+  border-color: transparent;
+  background: var(--accent);
+  color: #fff;
+}
+
+.chip .amt {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.chip.on .amt {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* -------------------------------------------------------------------- list */
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--line);
+}
+
+.item:last-child {
+  border-bottom: 0;
+}
+
+.item .body {
+  flex: 1;
+  min-width: 0;
+}
+
+.item .title {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item .meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.item .amt {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.day-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 2px 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------- meter */
+.meter {
+  height: 6px;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.meter > i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--tint, var(--accent));
+}
+
+/* -------------------------------------------------------------- month strip */
+.months {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.months::-webkit-scrollbar {
+  display: none;
+}
+
+/* --------------------------------------------------------------- bottom nav */
+.tabbar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  padding: 6px 8px calc(var(--safe-bottom) + 6px);
+  border-top: 1px solid var(--line);
+  background: rgba(15, 17, 21, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.tabbar a {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.tabbar a.active {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.tabbar .ico {
+  display: block;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+/* ------------------------------------------------------------------- toast */
+.toast {
+  position: fixed;
+  bottom: calc(var(--safe-bottom) + 84px);
+  left: 50%;
+  z-index: 50;
+  max-width: 90vw;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--income);
+  color: #06210f;
+  font-weight: 700;
+  transform: translateX(-50%);
+}
+
+.toast.bad {
+  background: var(--expense);
+  color: #2b0b0b;
+}
+
+/* -------------------------------------------------------------------- misc */
+.chart {
+  width: 100%;
+  height: 220px;
+}
+
+.spinner {
+  padding: 40px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat .k {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.stat .v {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.analysis {
+  white-space: pre-wrap;
+}

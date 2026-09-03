@@ -32,3 +32,8 @@ dist-ssr
 # Playwright
 /test-results/
 /blob-report/
+
+# personal finance data export + migration secrets
+data/
+tracker/.env.migrate
+tracker/.env.local
