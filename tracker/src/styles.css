@@ -1,5 +1,38 @@
-/* Mobile-first dark UI. Everything is sized for one-thumb use on a phone. */
+/*
+ * Mobile-first UI, sized for one-thumb use on a phone. Light is the base
+ * palette; dark is a full override under [data-theme="dark"]. The theme
+ * itself is decided in JS (src/lib/theme.ts), which stamps data-theme on
+ * <html> and resolves "system" against the OS setting -- an inline script in
+ * index.html does that before first paint, so there is no flash.
+ */
 :root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef0f4;
+  --line: #e1e4ea;
+  --text: #12141a;
+  --muted: #6b7280;
+  --accent: #2a6df5;
+
+  /* chosen for >=4.5:1 text contrast on the light surface, not part of the
+     validated categorical chart palette (see src/lib/palette.ts) */
+  --expense: #c0392b;
+  --income: #1a7f37;
+  --invest: #6f42c1;
+  --lend: #9a5b00;
+
+  --danger-surface: #fdeceb;
+  --tabbar-bg: rgba(255, 255, 255, 0.88);
+
+  --radius: 16px;
+  --tap: 48px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
   --bg: #0f1115;
   --surface: #171a21;
   --surface-2: #1f2430;
@@ -13,10 +46,8 @@
   --invest: #b98bff;
   --lend: #ffb03a;
 
-  --radius: 16px;
-  --tap: 48px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --danger-surface: #3a1f24;
+  --tabbar-bg: rgba(15, 17, 21, 0.94);
 
   color-scheme: dark;
 }
@@ -278,7 +309,7 @@ textarea.input {
 
 .btn.danger {
   border-color: transparent;
-  background: #3a1f24;
+  background: var(--danger-surface);
   color: var(--expense);
 }
 
@@ -417,7 +448,7 @@ textarea.input {
   display: flex;
   padding: 6px 8px calc(var(--safe-bottom) + 6px);
   border-top: 1px solid var(--line);
-  background: rgba(15, 17, 21, 0.94);
+  background: var(--tabbar-bg);
   backdrop-filter: blur(12px);
 }
 
@@ -444,6 +475,10 @@ textarea.input {
 }
 
 /* ------------------------------------------------------------------- toast */
+/* Fixed, theme-independent colours -- a toast floats above the page rather
+   than sitting on --surface, so it needs its own guaranteed contrast rather
+   than the semantic --income/--expense tokens, which are tuned for text on
+   --surface and differ in saturation between the two themes. */
 .toast {
   position: fixed;
   bottom: calc(var(--safe-bottom) + 84px);
@@ -452,15 +487,15 @@ textarea.input {
   max-width: 90vw;
   padding: 12px 18px;
   border-radius: 999px;
-  background: var(--income);
-  color: #06210f;
+  background: #1fa864;
+  color: #fff;
   font-weight: 700;
   transform: translateX(-50%);
 }
 
 .toast.bad {
-  background: var(--expense);
-  color: #2b0b0b;
+  background: #d6423f;
+  color: #fff;
 }
 
 /* -------------------------------------------------------------------- misc */

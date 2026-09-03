@@ -4,8 +4,8 @@ import EChart from '../components/EChart.vue';
 import { categoryTotals, dailyTotals, observations, summarize, topExpenses } from '../lib/analytics';
 import { dayLabel, money, moneyShort, monthLabel, shiftMonth } from '../lib/format';
 import { analyseMonth } from '../lib/gemini';
-import { GRID, MUTED, OTHER, SERIES, SURFACE, TEXT, seriesColor } from '../lib/palette';
-import { categoryById, knownMonths, loadMonth, store, txOf } from '../lib/store';
+import { chartPalette, seriesColor } from '../lib/palette';
+import { categoryById, knownMonths, loadKnownMonths, loadMonth, store, txOf } from '../lib/store';
 import type { EChartsOption } from 'echarts';
 
 /**
@@ -20,6 +20,9 @@ const analysisNote = ref('');
 const analysing = ref(false);
 
 onMounted(async () => {
+  // re-check which months exist every time the tab opens, not just at login --
+  // otherwise a new month never appears in the picker until the next restart
+  await loadKnownMonths();
   await loadMonth(month.value);
   await Promise.all([loadMonth(shiftMonth(month.value, -1)), runAnalysis()]);
 });
@@ -45,19 +48,29 @@ const slices = computed(() => {
   const out = head.map((c, i) => ({ ...c, color: seriesColor(i) }));
 
   if (rest > 0) {
-    out.push({ id: 'other', name: 'Other', amount: rest, share: rest / (summary.value.expense || 1), count: tail.length, color: OTHER });
+    out.push({
+      id: 'other',
+      name: 'Other',
+      amount: rest,
+      share: rest / (summary.value.expense || 1),
+      count: tail.length,
+      color: chartPalette.value.other
+    });
   }
 
   return out;
 });
 
-const donut: import('vue').ComputedRef<EChartsOption> = computed(() => ({
+const donut: import('vue').ComputedRef<EChartsOption> = computed(() => {
+  const p = chartPalette.value;
+
+  return {
   backgroundColor: 'transparent',
   tooltip: {
     trigger: 'item',
-    backgroundColor: '#1f2430',
-    borderColor: GRID,
-    textStyle: { color: TEXT, fontSize: 12 },
+    backgroundColor: p.surface,
+    borderColor: p.grid,
+    textStyle: { color: p.text, fontSize: 12 },
     formatter: (p: unknown) => {
       const d = p as { name: string; value: number; percent: number };
       return `${d.name}<br/><strong>${money(d.value)}</strong> · ${Math.round(d.percent)}%`;
@@ -70,7 +83,7 @@ const donut: import('vue').ComputedRef<EChartsOption> = computed(() => ({
       center: ['50%', '50%'],
       avoidLabelOverlap: true,
       // 2px surface gap between segments, so identity never rests on hue alone
-      itemStyle: { borderColor: SURFACE, borderWidth: 2 },
+      itemStyle: { borderColor: p.surface, borderWidth: 2 },
       label: { show: false },
       labelLine: { show: false },
       data: slices.value.map((s) => ({
@@ -80,20 +93,22 @@ const donut: import('vue').ComputedRef<EChartsOption> = computed(() => ({
       }))
     }
   ]
-}));
+  };
+});
 
 /** Daily expense bars: magnitude over time, one axis, rounded data-ends. */
 const daily: import('vue').ComputedRef<EChartsOption> = computed(() => {
   const rows = dailyTotals(month.value);
+  const p = chartPalette.value;
 
   return {
     backgroundColor: 'transparent',
     grid: { top: 16, right: 8, bottom: 24, left: 44 },
     tooltip: {
       trigger: 'axis',
-      backgroundColor: '#1f2430',
-      borderColor: GRID,
-      textStyle: { color: TEXT, fontSize: 12 },
+      backgroundColor: p.surface,
+      borderColor: p.grid,
+      textStyle: { color: p.text, fontSize: 12 },
       formatter: (p: unknown) => {
         const arr = p as { name: string; value: number }[];
         return `Day ${arr[0].name}<br/><strong>${money(arr[0].value)}</strong>`;
@@ -102,20 +117,20 @@ const daily: import('vue').ComputedRef<EChartsOption> = computed(() => {
     xAxis: {
       type: 'category',
       data: rows.map((r) => String(r.day)),
-      axisLine: { lineStyle: { color: GRID } },
+      axisLine: { lineStyle: { color: p.grid } },
       axisTick: { show: false },
-      axisLabel: { color: MUTED, fontSize: 10, interval: 4 }
+      axisLabel: { color: p.muted, fontSize: 10, interval: 4 }
     },
     yAxis: {
       type: 'value',
-      splitLine: { lineStyle: { color: GRID, type: 'dashed' } },
-      axisLabel: { color: MUTED, fontSize: 10, formatter: (v: number) => moneyShort(v) }
+      splitLine: { lineStyle: { color: p.grid, type: 'dashed' } },
+      axisLabel: { color: p.muted, fontSize: 10, formatter: (v: number) => moneyShort(v) }
     },
     series: [
       {
         type: 'bar',
         data: rows.map((r) => Math.round(r.amount)),
-        itemStyle: { color: SERIES[0], borderRadius: [4, 4, 0, 0] },
+        itemStyle: { color: p.series[0], borderRadius: [4, 4, 0, 0] },
         barMaxWidth: 14
       }
     ]
@@ -143,15 +158,16 @@ const drillChart: import('vue').ComputedRef<EChartsOption> = computed(() => {
   }
 
   const rows = [...byNote.entries()].sort((a, b) => a[1] - b[1]).slice(-8);
+  const p = chartPalette.value;
 
   return {
     backgroundColor: 'transparent',
     grid: { top: 8, right: 16, bottom: 8, left: 8, containLabel: true },
     tooltip: {
       trigger: 'item',
-      backgroundColor: '#1f2430',
-      borderColor: GRID,
-      textStyle: { color: TEXT, fontSize: 12 },
+      backgroundColor: p.surface,
+      borderColor: p.grid,
+      textStyle: { color: p.text, fontSize: 12 },
       formatter: (p: unknown) => {
         const d = p as { name: string; value: number };
         return `${d.name}<br/><strong>${money(d.value)}</strong>`;
@@ -163,18 +179,18 @@ const drillChart: import('vue').ComputedRef<EChartsOption> = computed(() => {
       data: rows.map((r) => r[0]),
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { color: TEXT, fontSize: 11 }
+      axisLabel: { color: p.text, fontSize: 11 }
     },
     series: [
       {
         type: 'bar',
         data: rows.map((r) => Math.round(r[1])),
-        itemStyle: { color: SERIES[1], borderRadius: [0, 4, 4, 0] },
+        itemStyle: { color: p.series[1], borderRadius: [0, 4, 4, 0] },
         barMaxWidth: 16,
         label: {
           show: true,
           position: 'right',
-          color: MUTED,
+          color: p.muted,
           fontSize: 10,
           formatter: (p: { value?: unknown }) => moneyShort(Number(p.value ?? 0))
         }

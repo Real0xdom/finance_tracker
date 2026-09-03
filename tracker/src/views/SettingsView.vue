@@ -3,6 +3,8 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { currentMonth, money, monthLabel } from '../lib/format';
 import { verifyKey } from '../lib/gemini';
+import { setThemePref, themePref } from '../lib/theme';
+import type { ThemePref } from '../lib/theme';
 import {
   addCategory,
   applyRecurring,
@@ -121,6 +123,23 @@ const kinds: CategoryKind[] = ['expense', 'income', 'investment', 'lending'];
   <div class="screen">
     <div class="topbar">
       <h1>Settings</h1>
+    </div>
+
+    <!-- appearance -->
+    <div class="section-title">Appearance</div>
+
+    <div class="panel">
+      <div class="chips">
+        <button
+          v-for="opt in (['system', 'light', 'dark'] as ThemePref[])"
+          :key="opt"
+          class="chip"
+          :class="{ on: themePref === opt }"
+          @click="setThemePref(opt)"
+        >
+          {{ opt === 'system' ? 'Match device' : opt === 'light' ? 'Light' : 'Dark' }}
+        </button>
+      </div>
     </div>
 
     <!-- Gemini -->
