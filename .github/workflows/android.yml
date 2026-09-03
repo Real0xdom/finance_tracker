@@ -72,17 +72,34 @@ jobs:
       - name: Name the APK
         run: |
           mkdir -p out
+          # a sha-tagged copy for the artifact history, and a fixed name for the
+          # release -- the release upload replaces same-named assets, so this
+          # one file is what keeps the release page down to a single download
           cp android/app/build/outputs/apk/debug/app-debug.apk "out/money-${GITHUB_SHA::7}.apk"
+          cp android/app/build/outputs/apk/debug/app-debug.apk out/money-latest.apk
 
       - uses: actions/upload-artifact@v4
         with:
           name: money-apk
-          path: tracker/out/*.apk
+          path: tracker/out/money-*.apk
           if-no-files-found: error
           retention-days: 30
 
       # Artifacts only download as a .zip, which is painful on a phone. The
       # release gives a direct .apk link the phone browser can install from.
+      - name: Remove stray assets from an earlier run
+        # One-time cleanup for assets uploaded before this file used a fixed
+        # name (money-<sha>.apk). Safe to keep permanently: it is a no-op once
+        # the release only ever holds money-latest.apk.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view latest-apk --repo "${{ github.repository }}" --json assets \
+            --jq '.assets[].name' 2>/dev/null | grep -v '^money-latest\.apk$' | while read -r name; do
+            gh release delete-asset latest-apk "$name" --repo "${{ github.repository }}" -y || true
+          done
+        continue-on-error: true
+
       - name: Publish to the "latest-apk" release
         uses: softprops/action-gh-release@v2
         with:
@@ -91,7 +108,7 @@ jobs:
           body: |
             Debug-signed APK for sideloading — built from `${{ github.sha }}`.
 
-            Open this page on your phone and tap the `.apk` below to install.
-          files: tracker/out/*.apk
+            Open this page on your phone and tap `money-latest.apk` below to install.
+          files: tracker/out/money-latest.apk
           # one moving tag, so the phone can always bookmark the same page
           make_latest: true
