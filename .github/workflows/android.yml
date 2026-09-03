@@ -39,26 +39,26 @@ jobs:
 
       - name: Build web bundle
         env:
-          # Read from the Secrets tab first, falling back to the Variables tab --
-          # both live under Settings -> Secrets and variables -> Actions, and it is
-          # easy to add them to the wrong one. The anon key is a publishable client
-          # key; row level security is what actually protects the data.
+          # Optional override. Config normally comes from the committed
+          # tracker/.env.production, so the build does not depend on these
+          # being present -- an empty value is ignored, not treated as a blank.
           FT_SUPABASE_URL: ${{ secrets.FT_SUPABASE_URL || vars.FT_SUPABASE_URL }}
           FT_SUPABASE_ANON_KEY: ${{ secrets.FT_SUPABASE_ANON_KEY || vars.FT_SUPABASE_ANON_KEY }}
-        run: |
-          # report each name separately, so a failure says which one is missing
-          # (lengths only -- never the values themselves)
-          echo "FT_SUPABASE_URL:      ${FT_SUPABASE_URL:+present} (${#FT_SUPABASE_URL} chars)"
-          echo "FT_SUPABASE_ANON_KEY: ${FT_SUPABASE_ANON_KEY:+present} (${#FT_SUPABASE_ANON_KEY} chars)"
+        run: npm run build
 
-          if [ -z "$FT_SUPABASE_URL" ] || [ -z "$FT_SUPABASE_ANON_KEY" ]; then
-            echo "::error::Missing config. Check Settings -> Secrets and variables -> Actions."
-            echo "::error::Names must match exactly: FT_SUPABASE_URL, FT_SUPABASE_ANON_KEY."
-            echo "::error::They must be under the 'Secrets' (or 'Variables') tab for Actions -- Dependabot secrets are not visible here."
+      - name: Verify the bundle carries the Supabase config
+        # Catches a bad or placeholder key here rather than on the phone, where
+        # the only symptom would be a login that never works.
+        run: |
+          if ! grep -rq "supabase.co" dist/assets; then
+            echo "::error::Built bundle has no Supabase URL in it -- check tracker/.env.production."
             exit 1
           fi
-
-          npm run build
+          if grep -rq "PASTE_YOUR_ANON_KEY_HERE" dist/assets; then
+            echo "::error::tracker/.env.production still has the placeholder anon key."
+            exit 1
+          fi
+          echo "Supabase config is present in the bundle."
 
       - name: Sync Capacitor
         run: npx cap sync android
