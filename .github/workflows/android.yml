@@ -13,6 +13,9 @@ on:
 jobs:
   apk:
     runs-on: ubuntu-latest
+    # the release step needs to create tags and releases in this repo
+    permissions:
+      contents: write
     defaults:
       run:
         working-directory: tracker
@@ -68,3 +71,18 @@ jobs:
           path: tracker/out/*.apk
           if-no-files-found: error
           retention-days: 30
+
+      # Artifacts only download as a .zip, which is painful on a phone. The
+      # release gives a direct .apk link the phone browser can install from.
+      - name: Publish to the "latest-apk" release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest-apk
+          name: Latest APK
+          body: |
+            Debug-signed APK for sideloading — built from `${{ github.sha }}`.
+
+            Open this page on your phone and tap the `.apk` below to install.
+          files: tracker/out/*.apk
+          # one moving tag, so the phone can always bookmark the same page
+          make_latest: true
