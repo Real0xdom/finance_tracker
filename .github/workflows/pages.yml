@@ -1,0 +1,64 @@
+name: Deploy web build to GitHub Pages
+
+# Same web bundle the Android APK ships, hosted as a plain HTTPS site.
+# iOS has no side-loadable install like the APK, so this URL is what an
+# iPhone opens in Safari and adds to the Home Screen (manifest.webmanifest
+# + apple-touch-icon make that behave like an installed app).
+#
+# One-time setup this workflow depends on: Settings -> Pages -> Source must
+# be set to "GitHub Actions" (not "Deploy from a branch").
+
+on:
+  push:
+    branches: [finance-tracker, main]
+    paths: ['tracker/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tracker
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build web bundle
+        env:
+          # same optional-override pattern as the Android build -- config
+          # normally comes from the committed tracker/.env.production
+          FT_SUPABASE_URL: ${{ secrets.FT_SUPABASE_URL || vars.FT_SUPABASE_URL }}
+          FT_SUPABASE_ANON_KEY: ${{ secrets.FT_SUPABASE_ANON_KEY || vars.FT_SUPABASE_ANON_KEY }}
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: tracker/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
